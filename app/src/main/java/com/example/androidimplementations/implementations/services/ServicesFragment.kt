@@ -1,5 +1,6 @@
 package com.example.androidimplementations.implementations.services
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.androidimplementations.DaggerAppComponent
+import com.example.androidimplementations.MainActivity
+import com.example.androidimplementations.MyApplication
 import com.example.androidimplementations.R
 import com.example.androidimplementations.databinding.FragmentServicesBinding
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 const val x = ""
 class ServicesFragment : Fragment() {
@@ -21,6 +31,10 @@ class ServicesFragment : Fragment() {
     lateinit var dataBindingView : FragmentServicesBinding
     var intent: Intent? = null
     lateinit var workManager: WorkManager
+
+    @Inject
+    lateinit var vm : TempViewModal
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,9 +45,20 @@ class ServicesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val comp = (requireActivity().application as MyApplication).appComponent.subComponent().inject(this)
+//        val vm : TempViewModal = ViewModelProvider(requireActivity()).get(TempViewModal::class.java)
+//        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
+
+//        val component = DaggerAppComponent.builder().build().inject(this)
+        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
+
         dataBindingView.startBackgroundService.setOnClickListener{
-            intent = Intent(requireContext(), BackgroundService::class.java)
-            requireActivity().startService(intent)
+            requireContext().startService(Intent(requireContext(), BackgroundService::class.java))
+
+
+//            intent = Intent(requireContext(), BackgroundService::class.java)
+//            requireActivity().startService(intent)
         }
         dataBindingView.stopBackgroundService.setOnClickListener{
             requireContext().stopService(intent)
@@ -52,13 +77,24 @@ class ServicesFragment : Fragment() {
 
 
     private fun performAction(){
-        val work = OneTimeWorkRequestBuilder<MyWorkManager>()
-            .setConstraints(Constraints(NetworkType.CONNECTED))
+//        val work = OneTimeWorkRequestBuilder<MyWorkManager>()
+//            .setConstraints(Constraints(NetworkType.CONNECTED))
+//            .build()
+////        workManager.enqueue(work)
+//        workManager.getWorkInfoByIdLiveData(work.id).observe(viewLifecycleOwner){
+//            if (it!=null){
+//                Log.d("WorkManager", "Work is ${it.state}")
+//            }
+//        }
+
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val periodicWork = PeriodicWorkRequestBuilder<MyWorkManager>(30, TimeUnit.SECONDS)
+            .setConstraints(constraints)
             .build()
-        workManager.enqueue(work)
-        workManager.getWorkInfoByIdLiveData(work.id).observe(viewLifecycleOwner){
+        workManager.enqueue(periodicWork)
+        workManager.getWorkInfoByIdLiveData(periodicWork.id).observe(viewLifecycleOwner){
             if (it!=null){
-                Log.d("WorkManager", "Work is ${it.state}")
+                Log.d("WorkManager", "Periodic Work is ${it.state}")
             }
         }
 
