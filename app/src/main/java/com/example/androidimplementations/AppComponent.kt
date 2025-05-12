@@ -11,8 +11,8 @@ interface AppComponent {
     fun subComponent(): SubComponent
 
 
-    fun inject(activity: MainActivity)
-
-    fun inject(fragment: ServicesFragment)
+//    fun inject(activity: MainActivity)
+//
+//    fun inject(fragment: ServicesFragment)
 
 }

@@ -32,27 +32,32 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     lateinit var mainActivityLayout : ActivityMainBinding
+    private var activityView :ActivityMainBinding? = null
     @Inject
     lateinit var vm : TempViewModal
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val vm : TempViewModal = ViewModelProvider(this).get(TempViewModal::class.java)
-//        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
-//        vm.updateData(10)
-
-
-        val component = (application as MyApplication).appComponent.subComponent().inject(this)
+        val vm : TempViewModal = ViewModelProvider(this).get(TempViewModal::class.java)
         Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
         vm.updateData(10)
 
 
-        mainActivityLayout = DataBindingUtil.setContentView(this, R.layout.activity_main)
+//        val component = (application as MyApplication).appComponent.subComponent().inject(this)
+//        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
+//        vm.updateData(10)
+
+        activityView = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(activityView!!.root)
+//        mainActivityLayout = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
 
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 200)
 //        Intent(this, DataBindingActivity::class.java).also{
+//            finishActivity(it.hashCode())
 //            startActivity(it)
+//
 //        }
 //        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 200)
 

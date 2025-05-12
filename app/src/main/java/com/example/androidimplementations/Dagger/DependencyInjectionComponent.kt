@@ -7,8 +7,8 @@ import javax.inject.Singleton
 @Component
 interface DependencyInjectionComponent {
 
-    @Singleton
-    fun inject(activity: DataBindingActivity)
+//    @Singleton
+//    fun inject(activity: DataBindingActivity)
 
 //    fun inject(fragment: ServicesFragment)
 }

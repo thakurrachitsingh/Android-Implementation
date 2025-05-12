@@ -2,6 +2,7 @@ package com.example.androidimplementations.implementations.okhttp
 
 import android.util.Log
 import com.example.androidimplementations.implementations.okhttp.RetrofitDao.RetrofitDao
+import com.example.androidimplementations.implementations.okhttp.RetrofitDao.RetrofitHelper
 import com.example.androidimplementations.implementations.okhttp.dataModel.Response
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -50,11 +51,8 @@ class Repository {
                 .build()
 
             //https://api.marketstack.com
-            val retrofitInstance = Retrofit.Builder()
-                .baseUrl("https://api.marketstack.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
+            val retrofitInstance = RetrofitHelper.getInstance()
+            Log.d("okhttpRepositoryRetro", "retrofitInstance: ${retrofitInstance.hashCode()}")
             retrofitInstance.create(RetrofitDao::class.java).getData("eod","b25239ec653add689085bdaa6bd0ff44", "AAPL")
         }
         val response = deferredObject.await()

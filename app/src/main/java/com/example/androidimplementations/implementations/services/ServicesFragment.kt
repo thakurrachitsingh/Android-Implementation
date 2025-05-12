@@ -51,7 +51,7 @@ class ServicesFragment : Fragment() {
 //        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
 
 //        val component = DaggerAppComponent.builder().build().inject(this)
-        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
+//        Log.d("ViewModel", "Data is ${vm.data.value} id: ${System.identityHashCode(vm)}")
 
         dataBindingView.startBackgroundService.setOnClickListener{
             requireContext().startService(Intent(requireContext(), BackgroundService::class.java))

@@ -2,6 +2,7 @@ package com.example.androidimplementations.Dagger
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +14,7 @@ import com.example.androidimplementations.Dagger.room.UserEntity
 import com.example.androidimplementations.MyApplication
 import com.example.androidimplementations.R
 import com.example.androidimplementations.databinding.ActivityDataBindingBinding
+import com.example.androidimplementations.implementations.services.TempViewModal
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,21 +25,29 @@ class DataBindingActivity : Activity() {
     lateinit var dependencyInjectionComponent: DependencyInjectionComponent
 
     @Inject
-    lateinit var dataBindingViewModel :DataBindingViewModel
+    lateinit var tempViewModel: TempViewModal
+
+
+//    @Inject
+//    lateinit var dataBindingViewModel :DataBindingViewModel
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityView = DataBindingUtil.setContentView(this, R.layout.activity_data_binding)
-        val component = (application as MyApplication).dependencyInjectionComponent
-        component.inject(this)
+//        val component = (application as MyApplication).dependencyInjectionComponent
+//        component.inject(this)
+
+
+        val subComponent = (application as MyApplication).appComponent.subComponent().inject(this)
+        Log.d("ViewModel", "Data is ${tempViewModel.data.value} id: ${System.identityHashCode(tempViewModel)}")
 //        val db = Room.databaseBuilder(applicationContext, DataBase::class.java, "UserDB").build()
 //        GlobalScope.launch {
 //            db.contactDao().insertUser(UserEntity(id = 0, name = "Rachit", age= 24, email = "my@gmail.com", phone = "1234567890"))
 //        }
 
-        activityView.dataBindingButton1.setOnClickListener {
-            dataBindingViewModel.getData()
-        }
+//        activityView.dataBindingButton1.setOnClickListener {
+//            dataBindingViewModel.getData()
+//        }
     }
 }
